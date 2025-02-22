@@ -3,29 +3,28 @@
 namespace OrderBundle\Validators\Test;
 
 use OrderBundle\Validators\CreditCardNumberValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CreditCardNumberValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider valueProvider
-     */
+    #[DataProvider('valueProvider')]
     public function testIsValid($value, $expectedResult)
     {
-        $creditCardNumberValidator = new CreditCardNumberValidator($value);
+        $creditCardValidator = new CreditCardNumberValidator($value);
 
-        $isValid = $creditCardNumberValidator->isValid();
+        $isValid = $creditCardValidator->isValid();
 
         $this->assertEquals($expectedResult, $isValid);
     }
 
-    public function valueProvider()
+    public static function valueProvider(): array
     {
         return [
-            'shouldBeValidWhenValueIsANumber' => ['value' => 4928148506666302, 'expectedResult' => true],
-            'shouldBeValidWhenValueIsACreditCardAsString' => ['value' => '4928148506666302', 'expectedResult' => true],
-            'shouldNotBeValidWhenValueIsNotACreditCard' => ['value' => '12738', 'expectedResult' => false],
-            'shouldNotBeValidWhenValueIsEmpty' => ['value' => '', 'expectedResult' => false]
+            'shouldBeValidWhenValueIsCreditCard' => ['value' => 4928148506666302, 'expectedResult' => true],
+            'shouldBeValidWhenValueIsCreditCardAsString' => ['value' => '4928148506666302', 'expectedResult' => true],
+            'shouldNotBeValidWhenValueIsNotCreditCard' => ['value' => 123, 'expectedResult' => false],
+            'shouldNotBeValidWhenValueIsEmpty' => ['value' => '', 'expectedResult' => false],
         ];
     }
 }

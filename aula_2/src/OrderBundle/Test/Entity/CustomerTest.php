@@ -3,52 +3,50 @@
 namespace OrderBundle\Test\Entity;
 
 use OrderBundle\Entity\Customer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CustomerTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider customerAllowedDataProvider
-     */
-    public function isAllowedToOrder($isActive, $isBlocked, $expectedAlloed)
+    #[DataProvider('customerAllowedDataProvider')]
+
+    public function testIsAllowedToOrder($isActive, $isBlocked, $expectedAllowed)
     {
         $customer = new Customer(
             $isActive,
             $isBlocked,
-            'Vinicius Oliveira',
-            '+5511955558888'
+            'Léo João',
+            '+5547988887777'
         );
 
         $isAllowed = $customer->isAllowedToOrder();
 
-        $this->assertEquals($expectedAlloed, $isAllowed);
+        $this->assertEquals($expectedAllowed, $isAllowed);
     }
 
-    public function customerAllowedDataProvider()
+    public static function customerAllowedDataProvider()
     {
         return [
             'shouldBeAllowedWhenIsActiveAndNotBlocked' => [
                 'isActive' => true,
                 'isBlocked' => false,
-                'expectedAllowed' => true
+                'expectedAllowed' => true,
             ],
             'shouldNotBeAllowedWhenIsActiveButIsBlocked' => [
                 'isActive' => true,
                 'isBlocked' => true,
-                'expectedAllowed' => false
+                'expectedAllowed' => false,
             ],
-            'shouldNotBeAllowedWhenIsNotActive' => [
+            'shouldNotBeAllowedWhenIsNotActiveAndNotBlocked' => [
                 'isActive' => false,
                 'isBlocked' => false,
-                'expectedAllowed' => false
+                'expectedAllowed' => false,
             ],
             'shouldNotBeAllowedWhenIsNotActiveAndIsBlocked' => [
                 'isActive' => false,
                 'isBlocked' => true,
-                'expectedAllowed' => false
+                'expectedAllowed' => false,
             ]
         ];
     }
 }
-

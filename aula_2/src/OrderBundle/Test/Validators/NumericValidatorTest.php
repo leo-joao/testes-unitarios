@@ -3,13 +3,12 @@
 namespace OrderBundle\Validators\Test;
 
 use OrderBundle\Validators\NumericValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class NumericValidatorTest extends TestCase
 {
-    /**
-     * @dataProvider valueProvider
-     */
+    #[DataProvider('valueProvider')]
     public function testIsValid($value, $expectedResult)
     {
         $numericValidator = new NumericValidator($value);
@@ -19,12 +18,12 @@ class NumericValidatorTest extends TestCase
         $this->assertEquals($expectedResult, $isValid);
     }
 
-    public function valueProvider()
+    public static function valueProvider(): array
     {
         return [
-            'shouldBeValidWhenValueIsANumber' => ['value' => 20, 'expectedResult' => true],
-            'shouldBeValidWhenValueIsANumericString' => ['value' => '20', 'expectedResult' => true],
-            'shouldNotBeValidWhenValueIsNotANumber' => ['value' => 'bla', 'expectedResult' => false],
+            'shouldBeValidWhenValueIsNumber' => ['value' => 20, 'expectedResult' => true],
+            'shouldBeValidWhenValueIsNumbericString' => ['value' => '20', 'expectedResult' => true],
+            'shouldNotBeValidWhenValueIsNotNumeric' => ['value' => 'abc', 'expectedResult' => false],
             'shouldNotBeValidWhenValueIsEmpty' => ['value' => '', 'expectedResult' => false],
         ];
     }
