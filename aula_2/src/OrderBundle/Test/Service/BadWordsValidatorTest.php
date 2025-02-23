@@ -4,20 +4,17 @@ namespace OrderBundle\Test\Service;
 
 use OrderBundle\Repository\BadWordsRepository;
 use OrderBundle\Service\BadWordsValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class BadWordsValidatorTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider badWordsDataProvider
-     */
-    public function hasBadWords($badWordsList, $text, $foundBadWords)
+    #[DataProvider('badWordsDataProvider')]
+    public function testHasBadWords($badWordsList, $text, $foundBadWords)
     {
         $badWordsRepository = $this->createMock(BadWordsRepository::class);
 
-        $badWordsRepository->method('findAllAsArray')
-            ->willReturn($badWordsList);
+        $badWordsRepository->method('findAllAsArray')->willReturn($badWordsList);
 
         $badWordsValidator = new BadWordsValidator($badWordsRepository);
 
@@ -26,28 +23,28 @@ class BadWordsValidatorTest extends TestCase
         $this->assertEquals($foundBadWords, $hasBadWords);
     }
 
-    public function badWordsDataProvider()
+    public static function badWordsDataProvider()
     {
         return [
             'shouldFindWhenHasBadWords' => [
-                'badWordsList' => ['bobo', 'chule', 'besta'],
-                'text' => 'Seu restaurante e muito bobo',
-                'foundBadWords' => true
+                'badWordsList' => ['bobo', 'burro', 'feio'],
+                'text' => 'Seu restaurante é feio',
+                'foundBadWords' => true,
             ],
             'shouldNotFindWhenHasNoBadWords' => [
-                'badWordsList' => ['bobo', 'chule', 'besta'],
-                'text' => 'Trocar batata por salada',
-                'foundBadWords' => false
+                'badWordsList' => ['bobo', 'burro', 'feio'],
+                'text' => 'Fazer o lanche sem cebola',
+                'foundBadWords' => false,
             ],
             'shouldNotFindWhenTextIsEmpty' => [
-                'badWordsList' => ['bobo', 'chule', 'besta'],
+                'badWordsList' => ['bobo', 'burro', 'feio'],
                 'text' => '',
-                'foundBadWords' => false
+                'foundBadWords' => false,
             ],
-            'shouldNotFindWhenBadWordsListIsEmpty' => [
+            'shouldNotFindWhenWordListIsEmpty' => [
                 'badWordsList' => [],
-                'text' => 'Seu restaurante e muito bobo',
-                'foundBadWords' => false
+                'text' => '',
+                'foundBadWords' => false,
             ]
         ];
     }
