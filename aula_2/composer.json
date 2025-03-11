@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "OrderBundle\\": "src/OrderBundle"
+            "OrderBundle\\": "src/OrderBundle",
+            "FidelityProgramBundle\\": "src/FidelityProgramBundle/"
         },
         "psr-0": {
             "MyFramework\\": "app/"

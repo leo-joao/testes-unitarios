@@ -20,6 +20,10 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         array (
             'OrderBundle\\' => 12,
         ),
+        'F' => 
+        array (
+            'FidelityProgramBundle\\' => 22,
+        ),
         'D' => 
         array (
             'DeepCopy\\' => 9,
@@ -34,6 +38,10 @@ class ComposerStaticInitfbee484fbcb98ba45566f17e8eb69e9b
         'OrderBundle\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/OrderBundle',
+        ),
+        'FidelityProgramBundle\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/FidelityProgramBundle',
         ),
         'DeepCopy\\' => 
         array (

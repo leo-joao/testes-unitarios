@@ -11,10 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 class FidelityProgramServiceTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldSaveWhenReceivePoints()
+    public function testShouldSaveWhenReceivePoints()
     {
         $pointsRepository = $this->createMock(PointsRepository::class);
         $pointsRepository->expects($this->once())
@@ -27,11 +24,11 @@ class FidelityProgramServiceTest extends TestCase
         $allMessages = [];
         $logger = $this->createMock(LoggerInterface::class);
         $logger->method('log')
-            ->will($this->returnCallback(
+            ->willReturnCallback(
                 function ($message) use (&$allMessages) {
                     $allMessages[] = $message;
                 }
-            ));
+            );
 
         $fidelityProgramService = new FidelityProgramService(
             $pointsRepository,
@@ -50,10 +47,7 @@ class FidelityProgramServiceTest extends TestCase
         $this->assertEquals($expectedMessages, $allMessages);
     }
 
-    /**
-     * @test
-     */
-    public function shouldNotSaveWhenReceiveZeroPoints()
+    public function testShouldNotSaveWhenReceiveZeroPoints()
     {
         $pointsRepository = $this->createMock(PointsRepository::class);
         $pointsRepository->expects($this->never())
