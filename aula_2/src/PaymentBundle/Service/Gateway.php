@@ -19,15 +19,15 @@ class Gateway
         LoggerInterface $logger,
         $user,
         $password
-    )
-    {
+    ) {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
         $this->user = $user;
         $this->password = $password;
     }
 
-    public function pay($name, $creditCardNumber, \DateTime $validity = null, $value) {
+    public function pay($name, $creditCardNumber, $validity = null, $value)
+    {
 
         $token = $this->httpClient->send('POST', self::BASE_URL . '/authenticate', [
             'user' => $this->user,

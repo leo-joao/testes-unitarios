@@ -9,10 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class GatewayTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shouldNotPayWhenAuthenticationFail()
+    public function testShouldNotPayWhenAuthenticationFail()
     {
         $httpClient = $this->createMock(HttpClientInterface::class);
         $logger = $this->createMock(LoggerInterface::class);
@@ -34,13 +31,17 @@ class GatewayTest extends TestCase
         $httpClient
             ->expects($this->once())
             ->method('send')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
+        $name = 'Vinicius Oliveira';
+        $creditCardNumber = 5555444488882222;
+        $validity = new \DateTime('now');
+        $value = 100;
         $paid = $gateway->pay(
-            'Vinicius Oliveira',
-            5555444488882222,
-            new \DateTime('now'),
-            100
+            $name,
+            $creditCardNumber,
+            $validity,
+            $value
         );
 
         $this->assertEquals(false, $paid);
@@ -49,7 +50,7 @@ class GatewayTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotPayWhenFailOnGateway()
+    public function testShouldNotPayWhenFailOnGateway()
     {
         $httpClient = $this->createMock(HttpClientInterface::class);
         $logger = $this->createMock(LoggerInterface::class);
@@ -58,15 +59,29 @@ class GatewayTest extends TestCase
         $gateway = new Gateway($httpClient, $logger, $user, $password);
 
         $token = 'meu-token';
+        $map = [
+            [
+                'POST',
+                Gateway::BASE_URL . '/authenticate',
+                [
+                    'user' => $user,
+                    'password' => $password
+                ],
+                $token
+            ],
+            [
+                'POST',
+                Gateway::BASE_URL . '/pay',
+                [
+                    'token' => $token
+                ],
+                ['paid' => false]
+            ]
+        ];
         $httpClient
-            ->expects($this->at(0))
+            ->expects($this->atLeast(2))
             ->method('send')
-            ->willReturn($token);
-
-        $httpClient
-            ->expects($this->at(1))
-            ->method('send')
-            ->willReturn(['paid' => false]);
+            ->willReturnMap($map);
 
         $logger
             ->expects($this->once())
@@ -90,7 +105,7 @@ class GatewayTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessfullyPayWhenGatewayReturnOk()
+    public function testShouldSuccessfullyPayWhenGatewayReturnOk()
     {
         $httpClient = $this->createMock(HttpClientInterface::class);
         $logger = $this->createMock(LoggerInterface::class);
@@ -127,9 +142,9 @@ class GatewayTest extends TestCase
             ]
         ];
         $httpClient
-            ->expects($this->atLeast(2))
+            ->expects($this->exactly(2))
             ->method('send')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         $paid = $gateway->pay(
             $name,

@@ -17,6 +17,8 @@ class FidelityProgramServiceTest extends TestCase
         $pointsRepository->expects($this->once())
             ->method('save');
 
+        // $pointsRepository = new PointsRepositorySpy();
+
         $pointsCalculator = $this->createMock(PointsCalculator::class);
         $pointsCalculator->method('calculatePointsToReceive')
             ->willReturn(100);
