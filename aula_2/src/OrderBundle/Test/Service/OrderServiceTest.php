@@ -27,7 +27,7 @@ class OrderServiceTest extends TestCase
     private $creditCard;
     private $orderService;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->badWordsValidator = $this->createMock(BadWordsValidator::class);
         $this->paymentService = $this->createMock(PaymentService::class);
@@ -42,7 +42,7 @@ class OrderServiceTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotProcessWhenCustomerIsNotAllowed()
+    public function testShouldNotProcessWhenCustomerIsNotAllowed()
     {
         $this->withOrderService()
             ->withCustomerNotAllowed();
@@ -60,7 +60,7 @@ class OrderServiceTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotProcessWhenItemIsNotAvailable()
+    public function testShouldNotProcessWhenItemIsNotAvailable()
     {
         $this->withOrderService()
             ->withCustomerAllowed()
@@ -79,7 +79,7 @@ class OrderServiceTest extends TestCase
     /**
      * @test
      */
-    public function shouldNotProcessWhenBadWordsIsFound()
+    public function testShouldNotProcessWhenBadWordsIsFound()
     {
         $this->withOrderService()
             ->withCustomerAllowed()
@@ -99,7 +99,7 @@ class OrderServiceTest extends TestCase
     /**
      * @test
      */
-    public function shouldSuccessfullyProcess()
+    public function testShouldSuccessfullyProcess()
     {
         $this->withOrderService()
             ->withCustomerAllowed()

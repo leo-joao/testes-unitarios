@@ -25,8 +25,7 @@ class OrderService
         PaymentService $paymentService,
         OrderRepository $orderRepository,
         FidelityProgramService $fidelityProgramService
-    )
-    {
+    ) {
         $this->badWordsValidator = $badWordsValidator;
         $this->paymentService = $paymentService;
         $this->orderRepository = $orderRepository;

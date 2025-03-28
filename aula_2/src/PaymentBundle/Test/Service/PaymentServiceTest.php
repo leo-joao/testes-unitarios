@@ -13,16 +13,34 @@ use PHPUnit\Framework\TestCase;
 
 class PaymentServiceTest extends TestCase
 {
+    private $gateway;
+    private $paymentTrannsactionRepository;
+    private $paymentService;
+    private $customer;
+    private $item;
+    private $creditCard;
+
+    // this one runs once for the whole test case
+    public static function setUpBeforeClass(): void
+    {
+
+    }
+
+    // this one runs once for each test method
+    public function setUp(): void
+    {
+        $this->gateway = $this->createMock(Gateway::class);
+        $this->paymentTrannsactionRepository = $this->createMock(PaymentTransactionRepository::class);
+        $this->paymentService = new PaymentService($this->gateway, $this->paymentTrannsactionRepository);
+
+        $this->customer = $this->createMock(Customer::class);
+        $this->item = $this->createMock(Item::class);
+        $this->creditCard = $this->createMock(CreditCard::class);
+    }
 
     public function testShouldSaveWhenGatewayReturnOkWithRetries()
     {
-        $gateway = $this->createMock(Gateway::class);
-
-        $paymentTrannsactionRepository = $this->createMock(PaymentTransactionRepository::class);
-
-        $paymentService = new PaymentService($gateway, $paymentTrannsactionRepository);
-
-        $gateway->expects($this->atLeast(3))
+        $this->gateway->expects($this->atLeast(3))
             ->method('pay')
             ->willReturnOnConsecutiveCalls(
                 false,
@@ -30,25 +48,16 @@ class PaymentServiceTest extends TestCase
                 true
             );
 
-        $paymentTrannsactionRepository
+        $this->paymentTrannsactionRepository
             ->expects($this->once())
             ->method('save');
 
-        $customer = $this->createMock(Customer::class);
-        $item = $this->createMock(Item::class);
-        $creditCard = $this->createMock(CreditCard::class);
-        $paymentService->pay($customer, $item, $creditCard);
+        $this->paymentService->pay($this->customer, $this->item, $this->creditCard);
     }
 
     public function testShouldThrowExceptionWhenGatewayFails()
     {
-        $gateway = $this->createMock(Gateway::class);
-
-        $paymentTrannsactionRepository = $this->createMock(PaymentTransactionRepository::class);
-
-        $paymentService = new PaymentService($gateway, $paymentTrannsactionRepository);
-
-        $gateway->expects($this->atLeast(3))
+        $this->gateway->expects($this->atLeast(3))
             ->method('pay')
             ->willReturnOnConsecutiveCalls(
                 false,
@@ -56,7 +65,7 @@ class PaymentServiceTest extends TestCase
                 false
             );
 
-        $paymentTrannsactionRepository
+        $this->paymentTrannsactionRepository
             ->expects($this->never())
             ->method('save');
 
@@ -65,6 +74,12 @@ class PaymentServiceTest extends TestCase
         $customer = $this->createMock(Customer::class);
         $item = $this->createMock(Item::class);
         $creditCard = $this->createMock(CreditCard::class);
-        $paymentService->pay($customer, $item, $creditCard);
+        $this->paymentService->pay($this->customer, $this->item, $this->creditCard);
+    }
+
+    protected function tearDown(): void
+    {
+        unset($this->gateway);
     }
 }
+
